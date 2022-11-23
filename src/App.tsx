@@ -9,7 +9,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { SortableItem } from './SortableItem';
 
@@ -22,6 +22,14 @@ function App() {
     })
   );
 
+  useEffect(() => {
+    console.log('orders changed', items.join(', '));
+
+    return () => {
+      console.log('cleanup', items.join(', '));
+    }
+  }, [items]);
+
   return (
     <DndContext 
       sensors={sensors}
@@ -32,7 +40,9 @@ function App() {
         items={items}
         strategy={verticalListSortingStrategy}
       >
-        {items.map(id => <SortableItem key={id} id={id} />)}
+        {items.map(id => <SortableItem key={id} id={id} onDeleteClick={(id) => {
+          setItems((prev) => prev.filter((i) => i !== id));
+        }} />)}
       </SortableContext>
     </DndContext>
   );
@@ -45,8 +55,9 @@ function App() {
       setItems((items) => {
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
-        
-        return arrayMove(items, oldIndex, newIndex);
+        const next =  arrayMove(items, oldIndex, newIndex);
+        console.log('next', next.join(', '))
+        return next;
       });
     }
   }

@@ -5,6 +5,7 @@ import { UniqueIdentifier } from '@dnd-kit/core';
 
 type Props = {
   id: UniqueIdentifier;
+  onDeleteClick?: (id: UniqueIdentifier) => void;
 }
 
 const colors = ['red', 'blue', 'green'];
@@ -27,7 +28,9 @@ export function SortableItem(props: Props) {
   
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      {props.id} <button {...listeners} style={{ cursor: 'grab' }}>Grab Here</button>
+      {props.id} <button {...listeners} style={{ cursor: 'grab' }}>Grab Here</button> <button onClick={() => props.onDeleteClick && props.onDeleteClick(props.id)}>
+        Delete Me
+      </button>
     </div>
   );
 }
